@@ -44,13 +44,11 @@ class SearchBarController<T> {
     _controllerListener?.onClear();
   }
 
-  void _search(
-      String text, Future<List<T>> Function(String text) onSearch) async {
+  void _search(String text, Future<List<T>> Function(String text) onSearch) async {
     _controllerListener?.onLoading();
     try {
       if (_cancelableOperation != null &&
-          (!_cancelableOperation.isCompleted ||
-              !_cancelableOperation.isCanceled)) {
+          (!_cancelableOperation.isCompleted || !_cancelableOperation.isCanceled)) {
         _cancelableOperation.cancel();
       }
       _cancelableOperation = CancelableOperation.fromFuture(
@@ -72,8 +70,7 @@ class SearchBarController<T> {
     }
   }
 
-  void injectSearch(
-      String searchText, Future<List<T>> Function(String text) onSearch) {
+  void injectSearch(String searchText, Future<List<T>> Function(String text) onSearch) {
     if (searchText != null && searchText.length >= minimumChars) {
       _searchQueryController.text = searchText;
       _search(searchText, onSearch);
@@ -101,24 +98,21 @@ class SearchBarController<T> {
   void removeSort() {
     _sortedList.clear();
     _lastSorting = null;
-    _controllerListener
-        ?.onListChanged(_filteredList.isEmpty ? _list : _filteredList);
+    _controllerListener?.onListChanged(_filteredList.isEmpty ? _list : _filteredList);
   }
 
   void sortList(int Function(T a, T b) sorting) {
     _lastSorting = sorting;
     _sortedList.clear();
-    _sortedList
-        .addAll(List<T>.from(_filteredList.isEmpty ? _list : _filteredList));
+    _sortedList.addAll(List<T>.from(_filteredList.isEmpty ? _list : _filteredList));
     _sortedList.sort(sorting);
     _controllerListener?.onListChanged(_sortedList);
   }
 
   void filterList(bool Function(T item) filter) {
     _filteredList.clear();
-    _filteredList.addAll(_sortedList.isEmpty
-        ? _list.where(filter).toList()
-        : _sortedList.where(filter).toList());
+    _filteredList.addAll(
+        _sortedList.isEmpty ? _list.where(filter).toList() : _sortedList.where(filter).toList());
     _controllerListener?.onListChanged(_filteredList);
   }
 }
@@ -265,8 +259,7 @@ class _SearchBarState<T> extends State<SearchBar<T>>
   @override
   void initState() {
     super.initState();
-    searchBarController =
-        widget.searchBarController ?? SearchBarController<T>();
+    searchBarController = widget.searchBarController ?? SearchBarController<T>();
     searchBarController.setListener(this);
     searchBarController.setTextController(_searchQueryController, widget.minimumChars);
   }
@@ -334,16 +327,14 @@ class _SearchBarState<T> extends State<SearchBar<T>>
     });
   }
 
-  Widget _buildListView(
-      List<T> items, Widget Function(T item, int index) builder) {
+  Widget _buildListView(List<T> items, Widget Function(T item, int index) builder) {
     return Padding(
       padding: widget.listPadding,
       child: StaggeredGridView.countBuilder(
         crossAxisCount: widget.crossAxisCount,
         itemCount: items.length,
         shrinkWrap: widget.shrinkWrap,
-        staggeredTileBuilder:
-            widget.indexedScaledTileBuilder ?? (int index) => ScaledTile.fit(1),
+        staggeredTileBuilder: widget.indexedScaledTileBuilder ?? (int index) => ScaledTile.fit(1),
         scrollDirection: widget.scrollDirection,
         mainAxisSpacing: widget.mainAxisSpacing,
         crossAxisSpacing: widget.crossAxisSpacing,
@@ -362,8 +353,7 @@ class _SearchBarState<T> extends State<SearchBar<T>>
       return widget.loader;
     } else if (_searchQueryController.text.length < widget.minimumChars) {
       if (widget.placeHolder != null) return widget.placeHolder;
-      return _buildListView(
-          widget.suggestions, widget.buildSuggestion ?? widget.onItemFound);
+      return _buildListView(widget.suggestions, widget.buildSuggestion ?? widget.onItemFound);
     } else if (_list.isNotEmpty) {
       return _buildListView(_list, widget.onItemFound);
     } else {
@@ -421,8 +411,7 @@ class _SearchBarState<T> extends State<SearchBar<T>>
                     duration: Duration(milliseconds: _animate ? 1000 : 0),
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 200),
-                      width:
-                          _animate ? MediaQuery.of(context).size.width * .2 : 0,
+                      width: _animate ? MediaQuery.of(context).size.width * .2 : 0,
                       child: Container(
                         color: Colors.transparent,
                         child: Center(
