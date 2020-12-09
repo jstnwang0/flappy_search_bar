@@ -9,7 +9,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'search_bar_style.dart';
 
-//test if github updates
 mixin _ControllerListener<T> on State<SearchBar<T>> {
   void onListChanged(List<T> items) {}
 
@@ -210,6 +209,9 @@ class SearchBar<T> extends StatefulWidget {
   /// Set a padding on the list
   final EdgeInsetsGeometry listPadding;
 
+  // Adjustable Tile Size
+  final StaggeredTile Function(T item) tileBuilder;
+
   SearchBar({
     Key key,
     @required this.onSearch,
@@ -241,6 +243,7 @@ class SearchBar<T> extends StatefulWidget {
     this.listPadding = const EdgeInsets.all(0),
     this.searchBarPadding = const EdgeInsets.all(0),
     this.headerPadding = const EdgeInsets.all(0),
+    this.tileBuilder,
   }) : super(key: key);
 
   @override
@@ -328,14 +331,17 @@ class _SearchBarState<T> extends State<SearchBar<T>>
     });
   }
 
-  Widget _buildListView(List<T> items, Widget Function(T item, int index) builder) {
+  Widget _buildListView(List<T> items, Widget Function(T item, int index) builder,
+      StaggeredTile Function(T item) tileBuilder) {
     return Padding(
       padding: widget.listPadding,
       child: StaggeredGridView.countBuilder(
         crossAxisCount: widget.crossAxisCount,
         itemCount: items.length,
         shrinkWrap: widget.shrinkWrap,
-        staggeredTileBuilder: widget.indexedScaledTileBuilder ?? (int index) => ScaledTile.fit(1),
+        staggeredTileBuilder: (int index) {
+          return tileBuilder(items[index]) ?? ScaledTile.fit(1);
+        },
         scrollDirection: widget.scrollDirection,
         mainAxisSpacing: widget.mainAxisSpacing,
         crossAxisSpacing: widget.crossAxisSpacing,
@@ -354,9 +360,10 @@ class _SearchBarState<T> extends State<SearchBar<T>>
       return widget.loader;
     } else if (_searchQueryController.text.length < widget.minimumChars) {
       if (widget.placeHolder != null) return widget.placeHolder;
-      return _buildListView(widget.suggestions, widget.buildSuggestion ?? widget.onItemFound);
+      return _buildListView(
+          widget.suggestions, widget.buildSuggestion ?? widget.onItemFound, widget.tileBuilder);
     } else if (_list.isNotEmpty) {
-      return _buildListView(_list, widget.onItemFound);
+      return _buildListView(_list, widget.onItemFound, widget.tileBuilder);
     } else {
       return widget.emptyWidget;
     }
