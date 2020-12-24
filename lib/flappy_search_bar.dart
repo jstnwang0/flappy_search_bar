@@ -247,7 +247,7 @@ class SearchBar<T> extends StatefulWidget {
     this.searchBarPadding = const EdgeInsets.all(0),
     this.headerPadding = const EdgeInsets.all(0),
     this.tileBuilder,
-    this.onTap;
+    this.onTap,
   }) : super(key: key);
 
   @override
