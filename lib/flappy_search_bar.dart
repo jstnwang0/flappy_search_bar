@@ -212,6 +212,9 @@ class SearchBar<T> extends StatefulWidget {
   // Adjustable Tile Size
   final StaggeredTile Function(T item) tileBuilder;
 
+  //On search bar tap
+  final Function onTap;
+
   SearchBar({
     Key key,
     @required this.onSearch,
@@ -244,6 +247,7 @@ class SearchBar<T> extends StatefulWidget {
     this.searchBarPadding = const EdgeInsets.all(0),
     this.headerPadding = const EdgeInsets.all(0),
     this.tileBuilder,
+    this.onTap;
   }) : super(key: key);
 
   @override
@@ -396,6 +400,7 @@ class _SearchBarState<T> extends State<SearchBar<T>>
                         child: TextField(
                           controller: _searchQueryController,
                           onChanged: _onTextChanged,
+                          onTap: widget.onTap,
                           style: widget.textStyle,
                           decoration: InputDecoration(
                             icon: widget.icon,
