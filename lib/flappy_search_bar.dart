@@ -398,6 +398,7 @@ class _SearchBarState<T> extends State<SearchBar<T>>
                       padding: widget.searchBarStyle.padding,
                       child: Theme(
                         child: TextField(
+                          autofocus: true,
                           controller: _searchQueryController,
                           onChanged: _onTextChanged,
                           onTap: widget.onTap,
